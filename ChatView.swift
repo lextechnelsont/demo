@@ -49,19 +49,50 @@ struct ChatView: View {
     var body: some View {
         NavigationView {
             List(messages) { msg in
-                HStack(alignment: .top) {
-                    Text(msg.speaker.avatar)
-                        .font(.largeTitle)
-                    VStack(alignment: .leading) {
-                        Text(msg.speaker.name)
-                            .font(.headline)
-                            .foregroundColor(msg.speaker.color)
-                        Text(msg.message)
-                    }
-                }
-                .padding(.vertical, 4)
+                MessageRow(message: msg)
+                    .listRowSeparator(.hidden)
             }
+            .listStyle(.plain)
             .navigationTitle("Animal Chat")
+        }
+    }
+}
+
+private struct MessageRow: View {
+    let message: ChatMessage
+
+    var body: some View {
+        HStack {
+            if message.speaker == .elephant {
+                AvatarBubble(message: message)
+                Spacer(minLength: 40)
+            } else {
+                Spacer(minLength: 40)
+                AvatarBubble(message: message)
+            }
+        }
+    }
+}
+
+private struct AvatarBubble: View {
+    let message: ChatMessage
+
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 8) {
+            if message.speaker == .elephant {
+                Text(message.speaker.avatar)
+                    .font(.largeTitle)
+            }
+
+            Text(message.message)
+                .padding(10)
+                .background(message.speaker.color.opacity(0.2))
+                .cornerRadius(10)
+
+            if message.speaker == .eagle {
+                Text(message.speaker.avatar)
+                    .font(.largeTitle)
+            }
         }
     }
 }
